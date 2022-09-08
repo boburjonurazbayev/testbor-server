@@ -127,8 +127,7 @@ INSERT INTO
 questions 
     (question_text, subject_name) 
 VALUES 
-    ('2+2', 'math'), 
-    ('I ... school, because i have many friends there', 'english')
+    ('v=720v=720 km/soatkm/soat tezlik bilan harakatlanayotgan IL-86IL−86 aerobus Toshkentdan Rossiyagacha bo‘lgan S=3000S=3000 kmkm masofani qancha tt vaqtda uchib o‘tadi?:  ', 'physics')
     RETURNING *;
 
 --      question_id | question_text | subject_name
@@ -139,23 +138,26 @@ VALUES
 
 
     ---------------------------------Answers false data 
+10	Oshqozon shirasi fеrmеntlari:	biology
+11	Oshqozon osti bеzi shirasi fеrmеntlari	biology
+12	Og’iz bo’shlig’ida ovqatning tarkibidagi qanday moddalar parchalanadi?	biology
+13	Oshqozon shirasi fеrmеntlari ovqat tarkibidagi qanday moddalarni parchalaydi:	biology
+14	Oshqozon osti bеzi shirasi fеrmеntlari ovqat tarkibidagi qanday moddalarni parchalaydi:	biology
 
-INSERT INTO 
-answers 
-    (answer_text, question_id) 
-VALUES 
-    ('8', 3), 
-    ('6', 3), 
-    ('0', 3) 
-    RETURNING *;
-
+    delete from answers where answer_id= 47;
+yog’lar	false	11
+46	oksillar	false	11
+47	kraxmal	false	11
+48
+.; B. oksillar; C. kraxmal: D. yog’lar, oqsillar
+    
+    
       ---------------------------------Answers true data 
 
 INSERT INTO 
 answers 
     (answer_text, question_id, answer_boolean) 
 VALUES 
-    ('4', 3, 't')
     RETURNING *;
 
 
@@ -178,33 +180,33 @@ VALUES
     RETURNING *;
 
 
+INSERT INTO 
+exams (score, user_id, faculty_id, s1_ans, s2_ans, exam_res) 
+VALUES (188.1, 1, 38, 30, 30, 'grant')
+RETURNING *;
 
-select
-    f.faculty_name,
-    s.subject_1,
-    s.subject_2,
-    json_agg((qa.*))
- from faculties as f
- inner join (
-    select
-        q.question_id,
-        q.question_text,
-        q.subject_name,
-        json_agg((
-            a.answer_id,
-            a.answer_text,
-            a.answer_boolean,
-            a.answer_id
-        )) as question_answers
-    from questions as q
-    inner join answers as a
-    on a.question_id = q.question_id
-    GROUP BY q.question_id
- ) as qa on qa.subject_name = s.subject_1
- inner join subjects as s 
- on s.subject_id = f.subject_id
- GROUP BY f.faculty_id;
---   json_agg((
---     q.question_id,
---     q.question_text
---    ))
+    select 
+        e.exam_id,
+        e.exam_time,
+        e.s1_ans,
+        e.s2_ans,
+        e.score,
+        e.exam_res,
+        uf.university_name,
+        uf.faculty_name,
+        us.username,
+        us.fullname
+    from exams as e
+    inner join (
+        select
+        u.university_name,
+        f.faculty_name,
+        f.faculty_id
+        from faculties as f 
+        inner join universities as u
+        on u.university_id = f.university_id
+    ) as uf on uf.faculty_id = e.faculty_id
+    inner join users as us
+    on us.user_id = e.user_id
+    where e.user_id = 1
+    order by e.score desc;

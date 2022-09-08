@@ -89,8 +89,11 @@ CREATE TABLE answers(
 DROP TABLE IF EXISTS exams;
 CREATE TABLE exams(
     exam_id SERIAL PRIMARY KEY,
-    examiner TEXT NOT NULL,
-    examiner_score INT NOT NULL,
+    score NUMERIC(4, 1) NOT NULL,
+    s1_ans INT NOT NULL,
+    s2_ans INT NOT NULL,
+    exam_res VARCHAR(30) NOT NULL,
     exam_time timestamp  DEFAULT current_timestamp,
-    faculty_name INT references questions(question_id)
+    user_id INT references users(user_id),
+    faculty_id INT references faculties(faculty_id)
 );
